@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { extractTokenPayload, getSoundByIndex } from "../utils";
 import { Alert, Input, Row, Col, Space } from "antd";
 import { useParams } from "react-router";
@@ -8,6 +8,7 @@ import { Content, Header } from "antd/lib/layout/layout";
 const Preview = () => {
   const soundRef = useRef();
   const { token } = useParams();
+  const [isPlaying, setIsPlaying] = useState(false);
   const [utterance, sound] = useMemo(() => {
     const payload = extractTokenPayload(token);
 
@@ -23,10 +24,14 @@ const Preview = () => {
   }, [token]);
 
   const speak = () => {
+    setIsPlaying(true);
     speechSynthesis.speak(utterance);
 
     utterance.onend = () => {
       soundRef.current.play();
+      soundRef.current.onended = () => {
+        setIsPlaying(false);
+      }
     };
   };
 
@@ -49,7 +54,7 @@ const Preview = () => {
             >
               <Alert type="success" showIcon={true} message={`Copy link: `} />
               <Input readOnly={true} value={link} />
-              <div onClick={speak}>
+              <div onClick={!isPlaying ? speak : ()=>{}}>
                 <h2>Play</h2>
                 <PlaySquareOutlined style={{ fontSize: 100 }} />
               </div>
