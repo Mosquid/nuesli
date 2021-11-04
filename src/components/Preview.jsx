@@ -32,7 +32,7 @@ const Preview = () => {
 
   const link = useMemo(() => {
     return window.location.href;
-  }, [token]);
+  }, []);
 
   return (
     <>
