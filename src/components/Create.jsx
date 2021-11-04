@@ -23,7 +23,11 @@ const Create = () => {
   const [token, setToken] = useState("");
   const handleNewsCreate = () => {
     const tkn = generateBase64Token({ sound, text });
-    if (tkn) setToken(tkn);
+    if (sound !== undefined && text !== "" && tkn) {
+      setToken(tkn);
+    } else {
+      alert('Select the sound and type some text please');
+    }
   };
 
   const navigate = useNavigate();
